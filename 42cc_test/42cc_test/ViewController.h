@@ -13,19 +13,30 @@
 #import "People.h"
 
 
-@interface ViewController : UIViewController <NSFetchedResultsControllerDelegate> {
+@interface ViewController : UIViewController <NSFetchedResultsControllerDelegate, UIAlertViewDelegate>  {
 @private
     NSFetchedResultsController *fetchedResultsController;
     NSManagedObjectContext *managedObjectContext;
 }
 
-@property (strong, nonatomic) IBOutlet UIImageView *imagePhoto;
+-(void)updateOutlets;
+
+- (IBAction)facebookLogout:(id)sender;
+
+//@property (strong, nonatomic) IBOutlet UIImageView *imagePhoto;
+@property (strong, nonatomic) IBOutlet FBProfilePictureView *imagePhoto;
 @property (strong, nonatomic) IBOutlet UILabel *labelName;
 @property (strong, nonatomic) IBOutlet UILabel *labelBirth;
 @property (strong, nonatomic) IBOutlet UILabel *labelContacts;
 @property (strong, nonatomic) IBOutlet UITextView *textViewBio;
+@property (strong, nonatomic) IBOutlet UIButton *buttonLogout;
+
+@property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+
+@property (nonatomic, strong) People *people;
+
 
 @end

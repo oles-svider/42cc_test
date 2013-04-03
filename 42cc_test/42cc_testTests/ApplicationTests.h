@@ -14,6 +14,7 @@
 
 @interface ApplicationTests : SenTestCase
 
+@property(nonatomic, weak) AppDelegate *appDelegate;
 @property(nonatomic, weak) ViewController *viewController;
 
 @end
