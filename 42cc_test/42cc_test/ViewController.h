@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  EditViewController.h
 //  42cc_test
 //
 //  Created by oles on 3/26/13.
@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+
 #import "AppDelegate.h"
 
 #import "People.h"
