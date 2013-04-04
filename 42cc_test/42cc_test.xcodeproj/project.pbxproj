@@ -34,7 +34,6 @@
 		76A4498B1701B7F900B5B1E3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A449661701B7F900B5B1E3 /* Foundation.framework */; };
 		76A449931701B7F900B5B1E3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A449911701B7F900B5B1E3 /* InfoPlist.strings */; };
 		76A449961701B7F900B5B1E3 /* ApplicationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A449951701B7F900B5B1E3 /* ApplicationTests.m */; };
-		76C00878170CAE22005553D5 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C00877170CAE22005553D5 /* EditViewController.m */; };
 		76C19826170734E2007F6CA6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C19825170734E2007F6CA6 /* CoreData.framework */; };
 		76C1982A170774BD007F6CA6 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 76C19828170774BD007F6CA6 /* DataModel.xcdatamodeld */; };
 		76C1982D17077927007F6CA6 /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C1982C17077927007F6CA6 /* People.m */; };
@@ -81,8 +80,6 @@
 		76A449921701B7F900B5B1E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		76A449941701B7F900B5B1E3 /* ApplicationTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplicationTests.h; sourceTree = "<group>"; };
 		76A449951701B7F900B5B1E3 /* ApplicationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplicationTests.m; sourceTree = "<group>"; };
-		76C00876170CAE22005553D5 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
-		76C00877170CAE22005553D5 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
 		76C19825170734E2007F6CA6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		76C19829170774BD007F6CA6 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		76C1982B17077927007F6CA6 /* People.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = People.h; path = ../People.h; sourceTree = "<group>"; };
@@ -179,8 +176,6 @@
 				76A449731701B7F900B5B1E3 /* AppDelegate.h */,
 				76A449741701B7F900B5B1E3 /* AppDelegate.m */,
 				76A4497C1701B7F900B5B1E3 /* MainStoryboard.storyboard */,
-				76C00876170CAE22005553D5 /* EditViewController.h */,
-				76C00877170CAE22005553D5 /* EditViewController.m */,
 				76A4497F1701B7F900B5B1E3 /* ViewController.h */,
 				76A449801701B7F900B5B1E3 /* ViewController.m */,
 				76A4496B1701B7F900B5B1E3 /* Supporting Files */,
@@ -349,7 +344,6 @@
 				76A449811701B7F900B5B1E3 /* ViewController.m in Sources */,
 				76C1982A170774BD007F6CA6 /* DataModel.xcdatamodeld in Sources */,
 				76C1982D17077927007F6CA6 /* People.m in Sources */,
-				76C00878170CAE22005553D5 /* EditViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
