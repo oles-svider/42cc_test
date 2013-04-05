@@ -26,8 +26,8 @@
             break;
         case 1:
             // ok - retry login
-            break;
             [self facebookLogin];
+            break;
         default:
             break;
     }
@@ -57,16 +57,32 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     people = (People *)[self.fetchedResultsController objectAtIndexPath:indexPath];
     
+    [self updateOutlets];
     [self facebookLogin];
 }
 
 
+#pragma mark -
+#pragma mark Facebook support
+
+- (void)facebookLogout:(id)sender {
+    
+    [[FBSession activeSession] closeAndClearTokenInformation];
+    [self facebookLogin];
+    NSLog(@"facebook logout!");
+}
+
 - (void)facebookLogin {
-    //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //if (![appDelegate.session isOpen])
     
     FBRequestHandler handler = ^ (FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+        
+        if (([FBSession activeSession].state == FBSessionStateClosed) ||
+            ([FBSession activeSession].state == FBSessionStateClosedLoginFailed))
+            return;
+        
         if (!error) {
+            
+            self.imagePhoto.profileID = user.id;
             
             if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
             {
@@ -84,7 +100,7 @@
                 NSDate *date = [formatter dateFromString:user.birthday];
                 people.birth = date;
                 
-                [self performSelectorOnMainThread:@selector(getUserImageFromFBView) withObject:nil waitUntilDone:NO];
+                [self performSelectorOnMainThread:@selector(getUserImageFromFBView) withObject:nil waitUntilDone:YES];
                 
                 NSError *merror;
                 if (![self.managedObjectContext save:&merror]) {
@@ -92,21 +108,16 @@
                     abort();
                 }
                 
-                //[self performSelectorOnMainThread:@selector(updateOutlets) withObject:nil waitUntilDone:NO];
-                
                 NSLog(@"UserName: %@", user.username);
                 NSLog(@"Name: %@", user.first_name);
                 NSLog(@"Last Name: %@", user.last_name);
                 NSLog(@"Birthday: %@", user.birthday);
             }
+            
             [self performSelectorOnMainThread:@selector(updateOutlets) withObject:nil waitUntilDone:NO];
             
         }
-        else {
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-            [alert show];
-            NSLog(@"error: %@", error);
-        }
+        [self.activityIndicator stopAnimating];
         
     };
     
@@ -114,14 +125,23 @@
     {
         NSArray *permissions =
         [NSArray arrayWithObjects:@"email", @"user_photos", @"friends_photos", @"user_birthday", nil];
-        
-        [FBSession openActiveSessionWithReadPermissions:permissions
-                                           allowLoginUI:YES
-                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                          /* handle success + failure in block */
-                                          [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
-                                      }];
-        
+        {
+            [self.activityIndicator startAnimating];
+            [FBSession openActiveSessionWithReadPermissions:permissions
+                                               allowLoginUI:YES
+                                          completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                              /* handle success + failure in block */
+                                              if (!error)
+                                                  [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
+                                              else {
+                                                  UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+                                                  [alert show];
+                                                  NSLog(@"error: %@", error);
+                                                  [self.activityIndicator startAnimating];
+                                                  
+                                              }
+                                          }];
+        }
     } else {
         [[[FBRequest alloc] initWithSession:[FBSession activeSession] graphPath:@"me"] startWithCompletionHandler:handler];
     }
@@ -132,7 +152,7 @@
 - (void)getUserImageFromFBView {
     UIImage *img = nil;
     
-    //1 - Solution to get UIImage obj
+    //Solution to get UIImage obj
     for (NSObject *obj in [self.imagePhoto subviews]) {
         if ([obj isMemberOfClass:[UIImageView class]]) {
             UIImageView *objImg = (UIImageView *)obj;
@@ -141,14 +161,17 @@
         }
     }
     
-    //2 - Solution to get UIImage obj
-    //    UIGraphicsBeginImageContext(profileDP.frame.size);
-    //    [profileDP.layer renderInContext:UIGraphicsGetCurrentContext()];
-    //    img = UIGraphicsGetImageFromCurrentImageContext();
-    //    UIGraphicsEndImageContext();
-    //Here we are setting image and it works 100% without part 2.
-    
     people.photo = UIImagePNGRepresentation(img);
+}
+
+- (void)setImageOffline:(UIImage *)image {
+    for (NSObject *obj in [self.imagePhoto subviews]) {
+        if ([obj isMemberOfClass:[UIImageView class]]) {
+            UIImageView *objImg = (UIImageView *)obj;
+            objImg.image = image;
+            break;
+        }
+    }
 }
 
 
@@ -164,24 +187,7 @@
                                                           timeStyle:NSDateFormatterNoStyle];
     self.labelContacts.text = people.contacts;
     self.textViewBio.text = people.bio;
-}
-
-- (IBAction)facebookLogout:(id)sender {
     
-    //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    //[appDelegate.session closeAndClearTokenInformation];
-    
-    /* This already done with closeAndClearTokenInformation
-     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-     if ([defaults objectForKey:@"FBAccessTokenKey"]) {
-     [defaults removeObjectForKey:@"FBAccessTokenKey"];
-     [defaults removeObjectForKey:@"FBExpirationDateKey"];
-     [defaults synchronize];
-     }
-     */
-    
-    [[FBSession activeSession] closeAndClearTokenInformation];
-    NSLog(@"facebook logout!");
 }
 
 
@@ -224,8 +230,8 @@
         aFetchedResultsController.delegate = self;
         self.fetchedResultsController = aFetchedResultsController;
     }
-	
-	return fetchedResultsController;
+    
+    return fetchedResultsController;
 }
 
 

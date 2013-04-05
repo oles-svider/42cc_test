@@ -24,7 +24,11 @@
 
 - (IBAction)facebookLogout:(id)sender;
 
-//@property (strong, nonatomic) IBOutlet UIImageView *imagePhoto;
+- (void)setImageOffline:(UIImage *)image;
+
+
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *imagePhoto;
 @property (strong, nonatomic) IBOutlet UILabel *labelName;
 @property (strong, nonatomic) IBOutlet UILabel *labelBirth;
@@ -38,6 +42,7 @@
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @property (nonatomic, strong) People *people;
+@property (nonatomic, strong) NSString *profileID;
 
 
 @end

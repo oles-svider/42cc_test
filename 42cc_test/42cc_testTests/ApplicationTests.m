@@ -68,12 +68,7 @@
 
 - (void) testUIButtonActionBinding {
     [self.viewController view];
-    /* Nothing to check at least now
-    NSArray *actions = [self.viewController.buttonLogout actionsForTarget:viewController forControlEvent:UIControlEventTouchUpInside];
-    STAssertTrue(([actions count] == 0), @"No action attached to buttonLogout");
-    STAssertTrue(([actions count] == 1), @"More than 1 action attached to buttonLogout");
-    */
-    //STAssertTrue([actions containsObject:@"facebookLogout"], @"Connection between 'buttonLogout' button and 'facebookLogout' action broken");
+    // Nothing to check at least now
 }
 
 
