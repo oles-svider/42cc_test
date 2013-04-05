@@ -82,41 +82,38 @@
         
         if (!error) {
             
-            self.imagePhoto.profileID = user.id;
+            people.name = user.first_name;
+            people.surname = user.last_name;
+            people.contacts = [user objectForKey:@"email"];
+            people.bio = user[@"bio"];
             
-            if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
-            {
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
-                people.name = user.first_name;
-                people.surname = user.last_name;
-                people.contacts = [user objectForKey:@"email"];
-                
-                NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-                [formatter setDateFormat:@"MM/dd/yyyy"];
-                NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-                [formatter setTimeZone:gmt];
-                NSDate *date = [formatter dateFromString:user.birthday];
-                people.birth = date;
-                
-                [self performSelectorOnMainThread:@selector(getUserImageFromFBView) withObject:nil waitUntilDone:YES];
-                
-                NSError *merror;
-                if (![self.managedObjectContext save:&merror]) {
-                    NSLog(@"Unresolved error at startWithCompletionHandler - %@, %@", merror, [merror userInfo]);
-                    abort();
-                }
-                
-                NSLog(@"UserName: %@", user.username);
-                NSLog(@"Name: %@", user.first_name);
-                NSLog(@"Last Name: %@", user.last_name);
-                NSLog(@"Birthday: %@", user.birthday);
+            NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+            [formatter setDateFormat:@"MM/dd/yyyy"];
+            NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+            [formatter setTimeZone:gmt];
+            NSDate *date = [formatter dateFromString:user.birthday];
+            people.birth = date;
+            
+            NSString *url = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=128&height=128",user.id];
+            people.photo = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+            if (people.photo == nil)
+                NSLog(@"Can't get facebook picture using graph url - %@", url);
+            
+            NSError *merror;
+            if (![self.managedObjectContext save:&merror]) {
+                NSLog(@"Unresolved error at startWithCompletionHandler - %@, %@", merror, [merror userInfo]);
+                abort();
             }
             
-            [self performSelectorOnMainThread:@selector(updateOutlets) withObject:nil waitUntilDone:NO];
-            
+            NSLog(@"UserName: %@", user.username);
+            NSLog(@"Name: %@", user.first_name);
+            NSLog(@"Last Name: %@", user.last_name);
+            NSLog(@"Birthday: %@", user.birthday);
+            NSLog(@"Bio: %@", user[@"bio"]);
+            NSLog(@"Email: %@", user[@"email"]);
         }
+        [self performSelectorOnMainThread:@selector(updateOutlets) withObject:nil waitUntilDone:NO];
+        
         [self.activityIndicator stopAnimating];
         
     };
@@ -124,54 +121,31 @@
     if (![[FBSession activeSession] isOpen])
     {
         NSArray *permissions =
-        [NSArray arrayWithObjects:@"email", @"user_photos", @"friends_photos", @"user_birthday", nil];
-        {
-            [self.activityIndicator startAnimating];
-            [FBSession openActiveSessionWithReadPermissions:permissions
-                                               allowLoginUI:YES
-                                          completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                              /* handle success + failure in block */
-                                              if (!error)
-                                                  [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
-                                              else {
-                                                  UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-                                                  [alert show];
-                                                  NSLog(@"error: %@", error);
-                                                  [self.activityIndicator startAnimating];
+        [NSArray arrayWithObjects:@"email", @"user_photos", @"user_birthday", @"user_about_me", nil];
+        [self.activityIndicator startAnimating];
+        [FBSession openActiveSessionWithReadPermissions:permissions
+                                           allowLoginUI:YES
+                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                          /* handle success + failure in block */
+                                          if (!error) {
+                                              if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
+                                              {
+                                                  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
+                                                  [[NSUserDefaults standardUserDefaults] synchronize];
                                                   
+                                                  [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
                                               }
-                                          }];
-        }
+                                          } else {
+                                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+                                              [alert show];
+                                              NSLog(@"error: %@", error);
+                                          }
+                                      }];
     } else {
         [[[FBRequest alloc] initWithSession:[FBSession activeSession] graphPath:@"me"] startWithCompletionHandler:handler];
     }
     
-}
-
-
-- (void)getUserImageFromFBView {
-    UIImage *img = nil;
-    
-    //Solution to get UIImage obj
-    for (NSObject *obj in [self.imagePhoto subviews]) {
-        if ([obj isMemberOfClass:[UIImageView class]]) {
-            UIImageView *objImg = (UIImageView *)obj;
-            img = objImg.image;
-            break;
-        }
-    }
-    
-    people.photo = UIImagePNGRepresentation(img);
-}
-
-- (void)setImageOffline:(UIImage *)image {
-    for (NSObject *obj in [self.imagePhoto subviews]) {
-        if ([obj isMemberOfClass:[UIImageView class]]) {
-            UIImageView *objImg = (UIImageView *)obj;
-            objImg.image = image;
-            break;
-        }
-    }
+    [self.activityIndicator stopAnimating];
 }
 
 
@@ -187,7 +161,7 @@
                                                           timeStyle:NSDateFormatterNoStyle];
     self.labelContacts.text = people.contacts;
     self.textViewBio.text = people.bio;
-    
+    self.imagePhoto.image = [UIImage imageWithData:people.photo];
 }
 
 

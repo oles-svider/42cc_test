@@ -16,7 +16,6 @@
                                 <accessibility key="accessibilityConfiguration" label="labelName"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="uGQ-v8-OFc"/>
-                                    <constraint firstAttribute="width" constant="144" id="wGW-bN-ar4"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -50,9 +49,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MDb-xh-srU" customClass="FBProfilePictureView">
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Yt-KS-Z9c">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Logout">
@@ -67,27 +63,32 @@
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="MlP-Ee-rxP"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="0am-tH-asJ">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="N2B-Ab-hMR"/>
+                                    <constraint firstAttribute="width" constant="128" id="QZq-Nz-fVm"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="7OU-Dp-IEL" firstAttribute="top" secondItem="e0E-YO-A5T" secondAttribute="top" constant="71" id="1J9-Wg-fbT"/>
+                            <constraint firstItem="BqK-br-NsD" firstAttribute="top" secondItem="0am-tH-asJ" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="67B-KW-lLb"/>
+                            <constraint firstItem="0am-tH-asJ" firstAttribute="top" secondItem="mdX-Ql-1Wi" secondAttribute="top" type="default" id="7IU-yH-vTz"/>
                             <constraint firstItem="PZG-H5-Nwf" firstAttribute="trailing" secondItem="7OU-Dp-IEL" secondAttribute="trailing" type="default" id="7sP-zD-hlb"/>
+                            <constraint firstItem="7OU-Dp-IEL" firstAttribute="leading" secondItem="0am-tH-asJ" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="9lh-Vd-IkA"/>
                             <constraint firstItem="MlP-Ee-rxP" firstAttribute="top" secondItem="e0E-YO-A5T" secondAttribute="top" constant="19" id="A4T-vz-IA0"/>
+                            <constraint firstItem="PZG-H5-Nwf" firstAttribute="leading" secondItem="0am-tH-asJ" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="B3L-kd-Jzi"/>
                             <constraint firstAttribute="trailing" secondItem="6Yt-KS-Z9c" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="CzB-SP-9PN"/>
                             <constraint firstAttribute="trailing" secondItem="mdX-Ql-1Wi" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="FO2-jU-48p"/>
-                            <constraint firstItem="MDb-xh-srU" firstAttribute="top" secondItem="e0E-YO-A5T" secondAttribute="top" constant="14" id="LKT-b3-onh"/>
                             <constraint firstItem="BqK-br-NsD" firstAttribute="leading" secondItem="e0E-YO-A5T" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="RmC-ku-K6g"/>
-                            <constraint firstItem="PZG-H5-Nwf" firstAttribute="leading" secondItem="MDb-xh-srU" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="U5p-aH-Sx0"/>
-                            <constraint firstItem="MDb-xh-srU" firstAttribute="top" secondItem="mdX-Ql-1Wi" secondAttribute="top" type="default" id="UfG-fg-fSa"/>
-                            <constraint firstItem="mdX-Ql-1Wi" firstAttribute="leading" secondItem="MDb-xh-srU" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="ZuC-fY-NMt"/>
-                            <constraint firstItem="6Yt-KS-Z9c" firstAttribute="top" secondItem="e0E-YO-A5T" secondAttribute="top" constant="99" id="cAh-ah-Rgo"/>
-                            <constraint firstItem="MDb-xh-srU" firstAttribute="leading" secondItem="e0E-YO-A5T" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="cJd-mi-dAt"/>
-                            <constraint firstItem="7OU-Dp-IEL" firstAttribute="leading" secondItem="MDb-xh-srU" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="fUe-6k-gFP"/>
+                            <constraint firstItem="0am-tH-asJ" firstAttribute="leading" secondItem="e0E-YO-A5T" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="RpL-n4-CA5"/>
                             <constraint firstItem="BqK-br-NsD" firstAttribute="top" secondItem="6Yt-KS-Z9c" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="gYJ-4Y-Gh4"/>
                             <constraint firstAttribute="trailing" secondItem="BqK-br-NsD" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="iuz-EB-lCd"/>
+                            <constraint firstItem="6Yt-KS-Z9c" firstAttribute="leading" secondItem="0am-tH-asJ" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="mjJ-bY-U0C"/>
                             <constraint firstItem="PZG-H5-Nwf" firstAttribute="top" secondItem="mdX-Ql-1Wi" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="nyj-Qj-FOn"/>
-                            <constraint firstItem="BqK-br-NsD" firstAttribute="top" secondItem="MDb-xh-srU" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="v5a-cg-JJi"/>
-                            <constraint firstItem="6Yt-KS-Z9c" firstAttribute="leading" secondItem="MDb-xh-srU" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="vEs-VW-OPD"/>
+                            <constraint firstItem="0am-tH-asJ" firstAttribute="top" secondItem="e0E-YO-A5T" secondAttribute="top" constant="14" id="rwO-yX-keA"/>
+                            <constraint firstItem="mdX-Ql-1Wi" firstAttribute="leading" secondItem="0am-tH-asJ" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="ybg-KD-zpQ"/>
                             <constraint firstAttribute="trailing" secondItem="MlP-Ee-rxP" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="z8a-kM-BU4"/>
                         </constraints>
                     </view>
@@ -96,7 +97,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="MlP-Ee-rxP" id="HXI-c7-QVp"/>
                         <outlet property="buttonLogout" destination="6Yt-KS-Z9c" id="Cg5-hJ-LWa"/>
-                        <outlet property="imagePhoto" destination="MDb-xh-srU" id="bFg-gm-s1y"/>
+                        <outlet property="imagePhoto" destination="0am-tH-asJ" id="B6s-za-1dL"/>
                         <outlet property="labelBirth" destination="PZG-H5-Nwf" id="xDD-sD-zOk"/>
                         <outlet property="labelContacts" destination="7OU-Dp-IEL" id="Pti-kC-CPO"/>
                         <outlet property="labelName" destination="mdX-Ql-1Wi" id="bgA-Rh-zM5"/>
@@ -130,9 +131,6 @@
         <image name="user.png" width="24" height="21"/>
     </resources>
     <classes>
-        <class className="FBProfilePictureView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/FBProfilePictureView.h"/>
-        </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
@@ -142,7 +140,7 @@
                 <relationship kind="action" name="facebookLogout:"/>
                 <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="buttonLogout" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="imagePhoto" candidateClass="FBProfilePictureView"/>
+                <relationship kind="outlet" name="imagePhoto" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="labelBirth" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="labelContacts" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="labelName" candidateClass="UILabel"/>

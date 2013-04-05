@@ -64,6 +64,7 @@
     STAssertNotNil(viewController.labelContacts, @"labelContacts is nil");
     STAssertNotNil(viewController.textViewBio, @"textViewBio is nil");
     STAssertNotNil(viewController.textViewBio, @"textViewBio is nil");
+    STAssertNotNil(viewController.imagePhoto, @"imagePhoto is nil");
 }
 
 - (void) testUIButtonActionBinding {

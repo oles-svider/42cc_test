@@ -24,12 +24,9 @@
 
 - (IBAction)facebookLogout:(id)sender;
 
-- (void)setImageOffline:(UIImage *)image;
-
-
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
-@property (strong, nonatomic) IBOutlet FBProfilePictureView *imagePhoto;
+@property (strong, nonatomic) IBOutlet UIImageView *imagePhoto;
 @property (strong, nonatomic) IBOutlet UILabel *labelName;
 @property (strong, nonatomic) IBOutlet UILabel *labelBirth;
 @property (strong, nonatomic) IBOutlet UILabel *labelContacts;
