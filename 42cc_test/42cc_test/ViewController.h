@@ -10,11 +10,11 @@
 #import <CoreData/CoreData.h>
 
 #import "AppDelegate.h"
-
 #import "People.h"
+#import "EditViewController.h"
 
 
-@interface ViewController : UIViewController <NSFetchedResultsControllerDelegate, UIAlertViewDelegate>  {
+@interface ViewController : UIViewController <NSFetchedResultsControllerDelegate, UIAlertViewDelegate, EditItemControllerDelegate>  {
 @private
     NSFetchedResultsController *fetchedResultsController;
     NSManagedObjectContext *managedObjectContext;

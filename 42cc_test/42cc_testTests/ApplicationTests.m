@@ -72,6 +72,19 @@
     // Nothing to check at least now
 }
 
+- (void) testEditViewController {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    EditViewController *editViewController = [storyboard instantiateViewControllerWithIdentifier:@"EditViewController"];
+    [editViewController performSelectorOnMainThread:@selector(loadView) withObject:nil waitUntilDone:YES];
+    
+    STAssertNotNil(editViewController.view, @"viewController wasn't set properly");
+    STAssertNotNil(editViewController.labelBirth, @"labelBirth is nil");
+    STAssertNotNil(editViewController.textFieldName, @"textFieldName is nil");
+    STAssertNotNil(editViewController.textFieldLastName, @"textFieldLastName is nil");
+    STAssertNotNil(editViewController.textViewBio, @"textViewBio is nil");
+    STAssertNotNil(editViewController.textFieldEmail, @"textFieldEmail is nil");
+}
+
 
 #pragma -
 #pragma Facebook tests

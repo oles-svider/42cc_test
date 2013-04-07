@@ -8,7 +8,6 @@
 
 #import "ViewController.h"
 
-
 @interface ViewController ()
 
 @end
@@ -170,6 +169,48 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"EditData"]) {
+        UINavigationController *navController = [segue destinationViewController];
+        EditViewController *editViewController = navController.childViewControllers[0];
+        
+        // set properties
+        editViewController.peopleName = people.name;
+        editViewController.peopleLastName = people.surname;
+        editViewController.peopleEmail = people.contacts;
+        editViewController.peopleBio = people.bio;
+        editViewController.peopleBirth = people.birth;
+        
+        editViewController.delegate = self;
+    }
+}
+
+#pragma mark - AddItemControllerDelegate
+
+- (void)editItemControllerDidSave:(EditViewController *)controller
+                             name:(NSString *)name
+                         lastName:(NSString *)lastName
+                         birthday:(NSDate *)birthday
+                         contacts:(NSString *)contacts
+                              bio:(NSString *)bio;
+
+{
+    if ([name length] || [lastName length]) {
+        people.name = name;
+        people.surname = lastName;
+        people.birth = birthday;
+        people.contacts = contacts;
+        people.bio = bio;
+        
+        [self.managedObjectContext save:nil];
+        [self.fetchedResultsController performFetch:nil];
+        [self updateOutlets];
+    }
+    [controller.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
