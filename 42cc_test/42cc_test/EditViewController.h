@@ -24,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *textFieldLastName;
 @property (strong, nonatomic) IBOutlet UITextField *textFieldName;
 
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *buttonSave;
 
 @property (strong, nonatomic) NSString *peopleName;
 @property (strong, nonatomic) NSString *peopleLastName;
@@ -31,7 +32,7 @@
 @property (strong, nonatomic) NSString *peopleBio;
 @property (strong, nonatomic) NSDate *peopleBirth;
 
-
+- (BOOL)validateEmailWithString:(NSString*)email;
 
 @end
 

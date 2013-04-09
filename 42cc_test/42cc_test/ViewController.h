@@ -32,6 +32,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *labelContacts;
 @property (strong, nonatomic) IBOutlet UITextView *textViewBio;
 @property (strong, nonatomic) IBOutlet UIButton *buttonLogout;
+@property (strong, nonatomic) IBOutlet UIButton *buttonEdit;
 
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 

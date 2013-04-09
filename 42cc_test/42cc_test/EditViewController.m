@@ -14,6 +14,8 @@
 
 @implementation EditViewController
 
+@synthesize buttonSave;
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -58,6 +60,29 @@
 }
 
 - (IBAction)saveAction:(id)sender {
+    
+    // Check some fields
+    if (![self validateEmailWithString:self.textFieldEmail.text]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Email address error"
+                                                        message:@"You must enter valid email address"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        [self.textFieldEmail becomeFirstResponder];
+        return;
+    }
+    if (!([self.textFieldName.text length] > 0)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No name entered"
+                                                        message:@"Please, enter name"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        [self.textFieldName becomeFirstResponder];
+        return;
+    }
+    
     [self.delegate editItemControllerDidSave:self
                                         name:self.textFieldName.text
                                     lastName:self.textFieldLastName.text
@@ -109,12 +134,19 @@
     else if (textField == self.textFieldLastName)
         [self.textFieldEmail becomeFirstResponder];
     else if (textField == self.textFieldEmail) {
-        //[self.tableView scrollRectToVisible:self.textViewBio.frame animated:YES];
         [self.textViewBio scrollRangeToVisible:self.textViewBio.selectedRange];
         [self.textViewBio becomeFirstResponder];
     }
     
     return NO; // We do not want UITextField to insert line-breaks.
+}
+
+
+- (BOOL)validateEmailWithString:(NSString*)email
+{
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:email];
 }
 
 @end
