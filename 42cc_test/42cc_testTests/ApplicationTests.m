@@ -153,7 +153,7 @@
     // check is data stored in database
     
     // check for name length > 0
-    STAssertTrue(!([self.viewController.people.name length] > 0), @"Name field length is 0");
+    STAssertTrue(([self.viewController.people.name length] > 0), @"Name field length is 0");
     
     // check for valid email
     STAssertTrue(![self.viewController.people.contacts isEqualToString:@"not_a_valid_email"], @"Invalid Email stored in database");
