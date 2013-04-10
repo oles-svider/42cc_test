@@ -144,6 +144,8 @@
         [[[FBRequest alloc] initWithSession:[FBSession activeSession] graphPath:@"me"] startWithCompletionHandler:handler];
     }
     
+    
+    
     [self.activityIndicator stopAnimating];
 }
 

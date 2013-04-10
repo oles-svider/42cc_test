@@ -11,6 +11,8 @@
 		760DFD30171485A10073145C /* FBUserSettingsViewResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 760DFD2E171485A10073145C /* FBUserSettingsViewResources.bundle */; };
 		760DFD32171485C80073145C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 760DFD31171485C80073145C /* FacebookSDK.framework */; };
 		760DFD33171485C80073145C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 760DFD31171485C80073145C /* FacebookSDK.framework */; };
+		760DFD351714908A0073145C /* 112-group.png in Resources */ = {isa = PBXBuildFile; fileRef = 760DFD341714908A0073145C /* 112-group.png */; };
+		760DFD38171491B90073145C /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760DFD37171491B90073145C /* FriendsViewController.m */; };
 		7617244717083CFF00F038D1 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 7617244617083CFF00F038D1 /* user.png */; };
 		7619A54F170A1852005A45B1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619A54E170A1852005A45B1 /* Social.framework */; };
 		7619A551170A1858005A45B1 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619A550170A1858005A45B1 /* Accounts.framework */; };
@@ -56,6 +58,9 @@
 		760DFD2D171485A10073145C /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FacebookSDKResources.bundle; sourceTree = "<group>"; };
 		760DFD2E171485A10073145C /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
 		760DFD31171485C80073145C /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		760DFD341714908A0073145C /* 112-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group.png"; sourceTree = "<group>"; };
+		760DFD36171491B90073145C /* FriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsViewController.h; sourceTree = "<group>"; };
+		760DFD37171491B90073145C /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsViewController.m; sourceTree = "<group>"; };
 		7617244617083CFF00F038D1 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		7619A54E170A1852005A45B1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		7619A550170A1858005A45B1 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -128,6 +133,7 @@
 		7617245F17083FC100F038D1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				760DFD341714908A0073145C /* 112-group.png */,
 				761BC8291712014D00178EAC /* info_24.png */,
 				76A449761701B7F900B5B1E3 /* Default.png */,
 				76A449781701B7F900B5B1E3 /* Default@2x.png */,
@@ -182,6 +188,8 @@
 				76A449731701B7F900B5B1E3 /* AppDelegate.h */,
 				76A449741701B7F900B5B1E3 /* AppDelegate.m */,
 				76A4497C1701B7F900B5B1E3 /* MainStoryboard.storyboard */,
+				760DFD36171491B90073145C /* FriendsViewController.h */,
+				760DFD37171491B90073145C /* FriendsViewController.m */,
 				7622CA301711BF5E008827B8 /* EditViewController.h */,
 				7622CA311711BF5E008827B8 /* EditViewController.m */,
 				76A4497F1701B7F900B5B1E3 /* ViewController.h */,
@@ -314,6 +322,7 @@
 				761BC82A1712014D00178EAC /* info_24.png in Resources */,
 				760DFD2F171485A10073145C /* FacebookSDKResources.bundle in Resources */,
 				760DFD30171485A10073145C /* FBUserSettingsViewResources.bundle in Resources */,
+				760DFD351714908A0073145C /* 112-group.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +363,7 @@
 				76C1982A170774BD007F6CA6 /* DataModel.xcdatamodeld in Sources */,
 				76C1982D17077927007F6CA6 /* People.m in Sources */,
 				7622CA321711BF5E008827B8 /* EditViewController.m in Sources */,
+				760DFD38171491B90073145C /* FriendsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
