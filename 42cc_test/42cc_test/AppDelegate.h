@@ -27,6 +27,8 @@ sourceApplication:(NSString *)sourceApplication
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+@property (nonatomic, retain) UIImageView *splashView;
+
 - (NSString *)applicationDocumentsDirectory;
 
 

@@ -56,6 +56,20 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     people = (People *)[self.fetchedResultsController objectAtIndexPath:indexPath];
     
+    UITabBarController *controller = (UITabBarController *)appDelegate.window.rootViewController;
+    self.friendsController = controller.viewControllers[1];
+
+    /*
+    _splashView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Default2.png"]];
+    _splashView.frame = CGRectMake(0, 0, 324, 480);
+    [appDelegate.window addSubview:_splashView];
+    [appDelegate.window bringSubviewToFront:_splashView];
+    [appDelegate.window makeKeyAndVisible];
+     */
+    UIViewController *vc = (UIViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"Splash"];
+    [controller addChildViewController:vc];
+    //[controller presentViewController:vc animated:NO completion:nil];
+    
     [self updateOutlets];
     [self facebookLogin];
 }
@@ -117,6 +131,37 @@
         
     };
     
+    
+    FBRequestHandler friendsHandler = ^ (FBRequestConnection *connection, NSDictionary *result, NSError *error) {
+        //NSArray* friends = [result objectForKey:@"data"];
+        NSDictionary* friends = [result objectForKey:@"data"];
+        
+        NSLog(@"Found: %i friends", friends.count);
+        
+        //self.userFriends = [[NSMutableDictionary alloc] initWithCapacity:friends.count];
+        self.friendsController.userFriends = [[NSMutableArray alloc] init];
+        
+        for (NSDictionary<FBGraphUser>* friend in friends) {
+            NSLog(@"I have a friend named %@ with info %@", friend.name, friend);
+            NSMutableDictionary *u = [[NSMutableDictionary alloc] initWithDictionary:friend copyItems:YES];
+            
+            // picture
+            NSString *url = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=64&height=64", friend.id];
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+            UIImage *image = [UIImage imageWithData:data];
+            
+            [u setObject:image forKey:@"picture"];
+            
+            [self.friendsController.userFriends addObject:u];
+        }
+             
+        // reload data in tableview
+        [self.friendsController.tableView reloadData];
+        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        [app.splashView removeFromSuperview];
+    };
+    
+    
     if (![[FBSession activeSession] isOpen])
     {
         NSArray *permissions =
@@ -133,6 +178,10 @@
                                                   [[NSUserDefaults standardUserDefaults] synchronize];
                                                   
                                                   [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
+                                                  
+                                                  // load friends list
+                                                  FBRequest* friendsRequest = [FBRequest requestForMyFriends];
+                                                  [friendsRequest startWithCompletionHandler:friendsHandler];
                                               }
                                           } else {
                                               UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
@@ -142,7 +191,12 @@
                                       }];
     } else {
         [[[FBRequest alloc] initWithSession:[FBSession activeSession] graphPath:@"me"] startWithCompletionHandler:handler];
+        
     }
+    
+    // load friends list
+    FBRequest* friendsRequest = [FBRequest requestForMyFriends];
+    [friendsRequest startWithCompletionHandler:friendsHandler];
     
     
     

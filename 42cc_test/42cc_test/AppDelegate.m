@@ -18,6 +18,7 @@
     [FBProfilePictureView class];
     [FBFriendPickerViewController class];
     
+    
     return YES;
 }
 							

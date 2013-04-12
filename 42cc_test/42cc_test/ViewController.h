@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "People.h"
 #import "EditViewController.h"
+#import "FriendsViewController.h"
 
 
 @interface ViewController : UIViewController <NSFetchedResultsControllerDelegate, UIAlertViewDelegate, EditItemControllerDelegate>  {
@@ -35,6 +36,9 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonEdit;
 
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
+//@property (strong, nonatomic) NSMutableArray *userFriends;
+@property (strong, nonatomic) FriendsViewController *friendsController;
+@property (strong, nonatomic) UIImageView *splashView;
 
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
