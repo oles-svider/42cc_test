@@ -167,8 +167,7 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     People *people = (People *)[self.appDelegate.fetchedResultsController objectAtIndexPath:indexPath];
     // check for name length > 0
-    STAssertTrue(([self.viewController.people.name length] > 0), @"Name field length is 0");
-    
+    STAssertTrue(([people.name length] > 0), @"Name field length is 0");
     // check for valid email
     STAssertTrue(![people.contacts isEqualToString:@"not_a_valid_email"], @"Invalid Email stored in database");
     
