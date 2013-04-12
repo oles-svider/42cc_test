@@ -12,17 +12,16 @@
 #import "AppDelegate.h"
 #import "People.h"
 #import "EditViewController.h"
+#import "FriendsViewController.h"
 
 
-@interface ViewController : UIViewController <NSFetchedResultsControllerDelegate, UIAlertViewDelegate, EditItemControllerDelegate>  {
+@interface ViewController : UIViewController <EditItemControllerDelegate>  {
 @private
     NSFetchedResultsController *fetchedResultsController;
     NSManagedObjectContext *managedObjectContext;
 }
 
 -(void)updateOutlets;
-
-- (IBAction)facebookLogout:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
@@ -34,13 +33,12 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonLogout;
 @property (strong, nonatomic) IBOutlet UIButton *buttonEdit;
 
-@property (strong, nonatomic) id<FBGraphUser> loggedInUser;
+- (IBAction)actionLogout:(id)sender;
 
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
-@property (nonatomic, strong) People *people;
-@property (nonatomic, strong) NSString *profileID;
+@property (nonatomic, retain) AppDelegate *appDelegate;
 
 
 @end

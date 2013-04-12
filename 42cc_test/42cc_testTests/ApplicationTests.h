@@ -17,6 +17,7 @@
 @property(nonatomic, weak) AppDelegate *appDelegate;
 @property(nonatomic, weak) ViewController *viewController;
 @property(nonatomic, weak) EditViewController *editViewController;
+@property(nonatomic, weak) FriendsViewController *friendsViewController;
 
 
 @end

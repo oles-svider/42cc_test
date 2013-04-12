@@ -10,27 +10,35 @@
 #import <CoreData/CoreData.h>
 #import <FacebookSDK/FacebookSDK.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate> {
+#import "People.h"
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSFetchedResultsControllerDelegate, UIAlertViewDelegate> {
     
     NSManagedObjectModel *managedObjectModel;
     NSManagedObjectContext *managedObjectContext;
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    
+    NSFetchedResultsController *fetchedResultsController;
 }
 
 - (BOOL)application:(UIApplication *)application
-openURL:(NSURL *)url
-sourceApplication:(NSString *)sourceApplication
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation;
 
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
 - (NSString *)applicationDocumentsDirectory;
 
-
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) FBSession *session;
+@property (strong, nonatomic) id<FBGraphUser> loggedInUser;
+@property (nonatomic, strong) People *people;
+@property (nonatomic, strong) NSString *profileID;
+@property (strong, nonatomic) NSMutableArray *userFriends;
+
+- (void)facebookLogout;
+- (void)facebookLogin;
 
 @end

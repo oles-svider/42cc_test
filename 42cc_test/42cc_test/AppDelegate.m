@@ -7,19 +7,35 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
 
 @implementation AppDelegate
 
-@synthesize session;
+@synthesize managedObjectModel, persistentStoreCoordinator, managedObjectContext, fetchedResultsController, people;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    [FBProfilePictureView class];
+    
+    NSError *error = nil;
+	if (![self.fetchedResultsController performFetch:&error]) {
+		/*
+		 Replace this implementation with code to handle the error appropriately.
+		 
+		 abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
+		 */
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		abort();
+	}
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    people = (People *)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    [self facebookLogin];
     
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -28,7 +44,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
@@ -81,6 +97,135 @@
     // close notification in order to do cleanup
     [FBSession.activeSession close];
 }
+
+
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0:
+            // cancel - exit application
+            abort();
+            break;
+        case 1:
+            // ok - retry login
+            [self facebookLogin];
+            break;
+        default:
+            break;
+    }
+    NSLog(@"Alert View dismissed with button at index %d",buttonIndex);
+}
+
+
+- (void)facebookLogout {
+    
+    [[FBSession activeSession] closeAndClearTokenInformation];
+    [self facebookLogin];
+    NSLog(@"facebook logout!");
+}
+
+- (void)facebookLogin {
+    
+    FBRequestHandler friendsHandler = ^ (FBRequestConnection *connection, NSDictionary *result, NSError *error) {
+        
+        NSDictionary* friends = [result objectForKey:@"data"];
+        NSLog(@"Found: %i friends", friends.count);
+        self.userFriends = [[NSMutableArray alloc] init];
+        
+        for (NSDictionary<FBGraphUser>* friend in friends) {
+            NSLog(@"I have a friend named %@ with info %@", friend.name, friend);
+            NSMutableDictionary *u = [[NSMutableDictionary alloc] initWithDictionary:friend copyItems:YES];
+            
+            // picture
+            NSString *url = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=64&height=64", friend.id];
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+            UIImage *image = [UIImage imageWithData:data];
+            
+            [u setObject:image forKey:@"picture"];
+            
+            [self.userFriends addObject:u];
+        }
+        
+        [self.window.rootViewController performSegueWithIdentifier: @"CloseSplash" sender: self];
+    };
+    
+    
+    FBRequestHandler handler = ^ (FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+        
+        if (!error) {
+            
+            self.people.name = user.first_name;
+            self.people.surname = user.last_name;
+            self.people.contacts = [user objectForKey:@"email"];
+            self.people.bio = user[@"bio"];
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+            [formatter setDateFormat:@"MM/dd/yyyy"];
+            NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+            [formatter setTimeZone:gmt];
+            NSDate *date = [formatter dateFromString:user.birthday];
+            self.people.birth = date;
+            
+            NSString *url = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=128&height=128",user.id];
+            self.people.photo = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+            if (self.people.photo == nil)
+                NSLog(@"Can't get facebook picture using graph url - %@", url);
+            
+            NSError *merror;
+            if (![self.managedObjectContext save:&merror]) {
+                NSLog(@"Unresolved error at startWithCompletionHandler - %@, %@", merror, [merror userInfo]);
+                abort();
+            }
+            
+            NSLog(@"UserName: %@", user.username);
+            NSLog(@"Name: %@", user.first_name);
+            NSLog(@"Last Name: %@", user.last_name);
+            NSLog(@"Birthday: %@", user.birthday);
+            NSLog(@"Bio: %@", user[@"bio"]);
+            NSLog(@"Email: %@", user[@"email"]);
+        } else NSLog(@"Error in FBRequestHandler handler - %@, %@", error, [error userInfo]);
+        
+    };
+    
+    BOOL bFriendsRequested = false;
+    if (![[FBSession activeSession] isOpen])
+    {
+        NSArray *permissions =
+        [NSArray arrayWithObjects:@"email", @"user_photos", @"user_birthday", @"user_about_me", nil];
+        bFriendsRequested = true;
+        [FBSession openActiveSessionWithReadPermissions:permissions
+                                           allowLoginUI:YES
+                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                          /* handle success + failure in block */
+                                          if (!error) {
+                                              if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
+                                              {
+                                                  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
+                                                  [[NSUserDefaults standardUserDefaults] synchronize];
+                                                  
+                                                  [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
+                                                  
+                                              }
+                                              // load friends list
+                                              FBRequest* friendsRequest = [FBRequest requestForMyFriends];
+                                              [friendsRequest startWithCompletionHandler:friendsHandler];
+                                              
+                                          } else {
+                                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+                                              [alert show];
+                                              NSLog(@"error: %@", error);
+                                          }
+                                      }];
+        
+    }
+    
+    // load friends list
+    if (!bFriendsRequested) {
+        FBRequest* friendsRequest = [FBRequest requestForMyFriends];
+        [friendsRequest startWithCompletionHandler:friendsHandler];
+    }
+}
+
 
 
 #pragma mark -
@@ -163,6 +308,36 @@
     
     return persistentStoreCoordinator;
 }
+
+
+#pragma mark -
+#pragma mark Fetched results controller
+
+- (NSFetchedResultsController *)fetchedResultsController {
+    // Set up the fetched results controller if needed.
+    if (fetchedResultsController == nil) {
+        // Create the fetch request for the entity.
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        // Edit the entity name as appropriate.
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:self.managedObjectContext];
+        [fetchRequest setEntity:entity];
+        
+        // Edit the sort key as appropriate.
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+        
+        [fetchRequest setSortDescriptors:sortDescriptors];
+        
+        // Edit the section name key path and cache name if appropriate.
+        // nil for section name key path means "no sections".
+        NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Root"];
+        aFetchedResultsController.delegate = self;
+        self.fetchedResultsController = aFetchedResultsController;
+    }
+    
+    return fetchedResultsController;
+}
+
 
 /**
  Returns the path to the application's documents directory.
