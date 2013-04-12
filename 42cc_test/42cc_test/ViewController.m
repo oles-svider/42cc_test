@@ -14,209 +14,33 @@
 
 @implementation ViewController
 
-@synthesize managedObjectContext, fetchedResultsController, people, loggedInUser;
-
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case 0:
-            // cancel - exit application
-            abort();
-            break;
-        case 1:
-            // ok - retry login
-            [self facebookLogin];
-            break;
-        default:
-            break;
-    }
-    NSLog(@"Alert View dismissed with button at index %d",buttonIndex);
-}
-
+@synthesize managedObjectContext, fetchedResultsController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.managedObjectContext = appDelegate.managedObjectContext;
-    
-    NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
-		/*
-		 Replace this implementation with code to handle the error appropriately.
-		 
-		 abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-		 */
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-		abort();
-	}
-    
-    // fill info about person
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    people = (People *)[self.fetchedResultsController objectAtIndexPath:indexPath];
-    
-    UITabBarController *controller = (UITabBarController *)appDelegate.window.rootViewController;
-    self.friendsController = controller.viewControllers[1];
-
-    /*
-    _splashView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Default2.png"]];
-    _splashView.frame = CGRectMake(0, 0, 324, 480);
-    [appDelegate.window addSubview:_splashView];
-    [appDelegate.window bringSubviewToFront:_splashView];
-    [appDelegate.window makeKeyAndVisible];
-     */
-    UIViewController *vc = (UIViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"Splash"];
-    [controller addChildViewController:vc];
-    //[controller presentViewController:vc animated:NO completion:nil];
+    self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.managedObjectContext = self.appDelegate.managedObjectContext;
+    self.fetchedResultsController = self.appDelegate.fetchedResultsController;
     
     [self updateOutlets];
-    [self facebookLogin];
-}
-
-
-#pragma mark -
-#pragma mark Facebook support
-
-- (void)facebookLogout:(id)sender {
-    
-    [[FBSession activeSession] closeAndClearTokenInformation];
-    [self facebookLogin];
-    NSLog(@"facebook logout!");
-}
-
-- (void)facebookLogin {
-    
-    FBRequestHandler handler = ^ (FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
-        
-        if (([FBSession activeSession].state == FBSessionStateClosed) ||
-            ([FBSession activeSession].state == FBSessionStateClosedLoginFailed))
-            return;
-        
-        if (!error) {
-            
-            people.name = user.first_name;
-            people.surname = user.last_name;
-            people.contacts = [user objectForKey:@"email"];
-            people.bio = user[@"bio"];
-            
-            NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-            [formatter setDateFormat:@"MM/dd/yyyy"];
-            NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-            [formatter setTimeZone:gmt];
-            NSDate *date = [formatter dateFromString:user.birthday];
-            people.birth = date;
-            
-            NSString *url = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=128&height=128",user.id];
-            people.photo = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-            if (people.photo == nil)
-                NSLog(@"Can't get facebook picture using graph url - %@", url);
-            
-            NSError *merror;
-            if (![self.managedObjectContext save:&merror]) {
-                NSLog(@"Unresolved error at startWithCompletionHandler - %@, %@", merror, [merror userInfo]);
-                abort();
-            }
-            
-            NSLog(@"UserName: %@", user.username);
-            NSLog(@"Name: %@", user.first_name);
-            NSLog(@"Last Name: %@", user.last_name);
-            NSLog(@"Birthday: %@", user.birthday);
-            NSLog(@"Bio: %@", user[@"bio"]);
-            NSLog(@"Email: %@", user[@"email"]);
-        }
-        [self performSelectorOnMainThread:@selector(updateOutlets) withObject:nil waitUntilDone:NO];
-        
-        [self.activityIndicator stopAnimating];
-        
-    };
-    
-    
-    FBRequestHandler friendsHandler = ^ (FBRequestConnection *connection, NSDictionary *result, NSError *error) {
-        //NSArray* friends = [result objectForKey:@"data"];
-        NSDictionary* friends = [result objectForKey:@"data"];
-        
-        NSLog(@"Found: %i friends", friends.count);
-        
-        //self.userFriends = [[NSMutableDictionary alloc] initWithCapacity:friends.count];
-        self.friendsController.userFriends = [[NSMutableArray alloc] init];
-        
-        for (NSDictionary<FBGraphUser>* friend in friends) {
-            NSLog(@"I have a friend named %@ with info %@", friend.name, friend);
-            NSMutableDictionary *u = [[NSMutableDictionary alloc] initWithDictionary:friend copyItems:YES];
-            
-            // picture
-            NSString *url = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=64&height=64", friend.id];
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-            UIImage *image = [UIImage imageWithData:data];
-            
-            [u setObject:image forKey:@"picture"];
-            
-            [self.friendsController.userFriends addObject:u];
-        }
-             
-        // reload data in tableview
-        [self.friendsController.tableView reloadData];
-        AppDelegate *app = [[UIApplication sharedApplication] delegate];
-        [app.splashView removeFromSuperview];
-    };
-    
-    
-    if (![[FBSession activeSession] isOpen])
-    {
-        NSArray *permissions =
-        [NSArray arrayWithObjects:@"email", @"user_photos", @"user_birthday", @"user_about_me", nil];
-        [self.activityIndicator startAnimating];
-        [FBSession openActiveSessionWithReadPermissions:permissions
-                                           allowLoginUI:YES
-                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                          /* handle success + failure in block */
-                                          if (!error) {
-                                              if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
-                                              {
-                                                  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
-                                                  [[NSUserDefaults standardUserDefaults] synchronize];
-                                                  
-                                                  [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
-                                                  
-                                                  // load friends list
-                                                  FBRequest* friendsRequest = [FBRequest requestForMyFriends];
-                                                  [friendsRequest startWithCompletionHandler:friendsHandler];
-                                              }
-                                          } else {
-                                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-                                              [alert show];
-                                              NSLog(@"error: %@", error);
-                                          }
-                                      }];
-    } else {
-        [[[FBRequest alloc] initWithSession:[FBSession activeSession] graphPath:@"me"] startWithCompletionHandler:handler];
-        
-    }
-    
-    // load friends list
-    FBRequest* friendsRequest = [FBRequest requestForMyFriends];
-    [friendsRequest startWithCompletionHandler:friendsHandler];
-    
-    
-    
-    [self.activityIndicator stopAnimating];
 }
 
 
 - (void)updateOutlets {
     // name
-    NSMutableString *fullName = [[NSMutableString alloc] initWithString:people.name];
+    NSMutableString *fullName = [[NSMutableString alloc] initWithString:self.appDelegate.people.name];
     [fullName appendString:@" "];
-    [fullName appendString:people.surname];
+    [fullName appendString:self.appDelegate.people.surname];
     self.labelName.text = fullName;
     // birth
-    self.labelBirth.text = [NSDateFormatter localizedStringFromDate:people.birth
+    self.labelBirth.text = [NSDateFormatter localizedStringFromDate:self.appDelegate.people.birth
                                                           dateStyle:NSDateFormatterMediumStyle
                                                           timeStyle:NSDateFormatterNoStyle];
-    self.labelContacts.text = people.contacts;
-    self.textViewBio.text = people.bio;
-    self.imagePhoto.image = [UIImage imageWithData:people.photo];
+    self.labelContacts.text = self.appDelegate.people.contacts;
+    self.textViewBio.text = self.appDelegate.people.bio;
+    self.imagePhoto.image = [UIImage imageWithData:self.appDelegate.people.photo];
 }
 
 
@@ -233,11 +57,11 @@
         EditViewController *editViewController = navController.childViewControllers[0];
         
         // set properties
-        editViewController.peopleName = people.name;
-        editViewController.peopleLastName = people.surname;
-        editViewController.peopleEmail = people.contacts;
-        editViewController.peopleBio = people.bio;
-        editViewController.peopleBirth = people.birth;
+        editViewController.peopleName = self.appDelegate.people.name;
+        editViewController.peopleLastName = self.appDelegate.people.surname;
+        editViewController.peopleEmail = self.appDelegate.people.contacts;
+        editViewController.peopleBio = self.appDelegate.people.bio;
+        editViewController.peopleBirth = self.appDelegate.people.birth;
         
         editViewController.delegate = self;
     }
@@ -254,11 +78,11 @@
 
 {
     if ([name length] || [lastName length]) {
-        people.name = name;
-        people.surname = lastName;
-        people.birth = birthday;
-        people.contacts = contacts;
-        people.bio = bio;
+        self.appDelegate.people.name = name;
+        self.appDelegate.people.surname = lastName;
+        self.appDelegate.people.birth = birthday;
+        self.appDelegate.people.contacts = contacts;
+        self.appDelegate.people.bio = bio;
         
         [self.managedObjectContext save:nil];
         [self.fetchedResultsController performFetch:nil];
@@ -277,33 +101,10 @@
 }
 #endif
 
-#pragma mark -
-#pragma mark Fetched results controller
 
-- (NSFetchedResultsController *)fetchedResultsController {
-    // Set up the fetched results controller if needed.
-    if (fetchedResultsController == nil) {
-        // Create the fetch request for the entity.
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        // Edit the entity name as appropriate.
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"People" inManagedObjectContext:managedObjectContext];
-        [fetchRequest setEntity:entity];
-        
-        // Edit the sort key as appropriate.
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-        
-        [fetchRequest setSortDescriptors:sortDescriptors];
-        
-        // Edit the section name key path and cache name if appropriate.
-        // nil for section name key path means "no sections".
-        NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:@"Root"];
-        aFetchedResultsController.delegate = self;
-        self.fetchedResultsController = aFetchedResultsController;
-    }
-    
-    return fetchedResultsController;
+
+- (IBAction)actionLogout:(id)sender {
+    [self.appDelegate facebookLogout];
 }
-
-
+     
 @end

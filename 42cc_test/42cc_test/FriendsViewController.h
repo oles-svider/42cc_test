@@ -9,13 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
 
-
-//@interface FriendsViewController : FBFriendPickerViewController <FBFriendPickerDelegate>
+#import "AppDelegate.h"
 
 @interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-//@property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
-@property (strong, nonatomic) NSMutableArray *userFriends;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) AppDelegate *appDelegate;
 
 @end

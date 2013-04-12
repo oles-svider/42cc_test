@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12B19" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="R6K-oq-zJq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12B19" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="JuC-XD-c28">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -7,7 +7,7 @@
         <!--View Controller - Main-->
         <scene sceneID="Nbx-kd-tJx">
             <objects>
-                <viewController storyboardIdentifier="ViewControllerMain" id="IFY-Tc-Kd2" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="IFY-Tc-Kd2" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="e0E-YO-A5T">
                         <rect key="frame" x="0.0" y="20" width="320" height="411"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -63,7 +63,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="facebookLogout:" destination="IFY-Tc-Kd2" eventType="touchUpInside" id="Wb3-ns-6Cf"/>
+                                    <action selector="actionLogout:" destination="IFY-Tc-Kd2" eventType="touchUpInside" id="R3H-bZ-vBB"/>
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="MlP-Ee-rxP"/>
@@ -384,7 +384,7 @@
         <!--Friends View Controller - Friends-->
         <scene sceneID="Mcc-k0-iDZ">
             <objects>
-                <tableViewController id="hlW-s0-t0A" customClass="FriendsViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="FriendsViewController" id="hlW-s0-t0A" customClass="FriendsViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="nRi-4g-cM9">
                         <rect key="frame" x="0.0" y="20" width="320" height="411"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -420,6 +420,9 @@
                             <constraint firstItem="COi-5b-Bub" firstAttribute="leading" secondItem="yVj-nf-BPO" secondAttribute="leading" type="default" id="shK-yC-4ef"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <segue destination="R6K-oq-zJq" kind="modal" identifier="CloseSplash" animates="NO" id="uYu-sx-af7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yxt-lO-ZwB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -452,45 +455,6 @@
         <image name="info_24.png" width="24" height="24"/>
         <image name="user.png" width="24" height="21"/>
     </resources>
-    <classes>
-        <class className="EditViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancelAction:"/>
-                <relationship kind="action" name="saveAction:"/>
-                <relationship kind="action" name="selectBirthday:"/>
-                <relationship kind="outlet" name="buttonSave" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="labelBirth" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="textFieldEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldLastName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textViewBio" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="FriendsViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/FriendsViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="ViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="facebookLogout:"/>
-                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="buttonEdit" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonLogout" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="imagePhoto" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="labelBirth" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="labelContacts" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="labelName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="textViewBio" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
