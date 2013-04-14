@@ -17,6 +17,9 @@
 		7619A54F170A1852005A45B1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619A54E170A1852005A45B1 /* Social.framework */; };
 		7619A551170A1858005A45B1 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619A550170A1858005A45B1 /* Accounts.framework */; };
 		7619A555170A1CFC005A45B1 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619A554170A1CFC005A45B1 /* AdSupport.framework */; };
+		761B71B21719E70E002A97B9 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 761B71B11719E70E002A97B9 /* FriendCell.m */; };
+		761B71B51719ED89002A97B9 /* down_24.png in Resources */ = {isa = PBXBuildFile; fileRef = 761B71B31719ED89002A97B9 /* down_24.png */; };
+		761B71B61719ED89002A97B9 /* up_24.png in Resources */ = {isa = PBXBuildFile; fileRef = 761B71B41719ED89002A97B9 /* up_24.png */; };
 		761BC82A1712014D00178EAC /* info_24.png in Resources */ = {isa = PBXBuildFile; fileRef = 761BC8291712014D00178EAC /* info_24.png */; };
 		761E7120170AF0A900C42FCE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619A554170A1CFC005A45B1 /* AdSupport.framework */; };
 		761E7122170AF0AE00C42FCE /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619A54E170A1852005A45B1 /* Social.framework */; };
@@ -65,6 +68,10 @@
 		7619A54E170A1852005A45B1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		7619A550170A1858005A45B1 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		7619A554170A1CFC005A45B1 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		761B71B01719E70E002A97B9 /* FriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendCell.h; sourceTree = "<group>"; };
+		761B71B11719E70E002A97B9 /* FriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendCell.m; sourceTree = "<group>"; };
+		761B71B31719ED89002A97B9 /* down_24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down_24.png; sourceTree = "<group>"; };
+		761B71B41719ED89002A97B9 /* up_24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up_24.png; sourceTree = "<group>"; };
 		761BC8291712014D00178EAC /* info_24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_24.png; sourceTree = "<group>"; };
 		7622CA301711BF5E008827B8 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
 		7622CA311711BF5E008827B8 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
@@ -133,6 +140,8 @@
 		7617245F17083FC100F038D1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				761B71B31719ED89002A97B9 /* down_24.png */,
+				761B71B41719ED89002A97B9 /* up_24.png */,
 				760DFD341714908A0073145C /* 112-group.png */,
 				761BC8291712014D00178EAC /* info_24.png */,
 				76A449761701B7F900B5B1E3 /* Default.png */,
@@ -188,6 +197,8 @@
 				76A449731701B7F900B5B1E3 /* AppDelegate.h */,
 				76A449741701B7F900B5B1E3 /* AppDelegate.m */,
 				76A4497C1701B7F900B5B1E3 /* MainStoryboard.storyboard */,
+				761B71B01719E70E002A97B9 /* FriendCell.h */,
+				761B71B11719E70E002A97B9 /* FriendCell.m */,
 				760DFD36171491B90073145C /* FriendsViewController.h */,
 				760DFD37171491B90073145C /* FriendsViewController.m */,
 				7622CA301711BF5E008827B8 /* EditViewController.h */,
@@ -323,6 +334,8 @@
 				760DFD2F171485A10073145C /* FacebookSDKResources.bundle in Resources */,
 				760DFD30171485A10073145C /* FBUserSettingsViewResources.bundle in Resources */,
 				760DFD351714908A0073145C /* 112-group.png in Resources */,
+				761B71B51719ED89002A97B9 /* down_24.png in Resources */,
+				761B71B61719ED89002A97B9 /* up_24.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +377,7 @@
 				76C1982D17077927007F6CA6 /* People.m in Sources */,
 				7622CA321711BF5E008827B8 /* EditViewController.m in Sources */,
 				760DFD38171491B90073145C /* FriendsViewController.m in Sources */,
+				761B71B21719E70E002A97B9 /* FriendCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

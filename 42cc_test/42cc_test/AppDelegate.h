@@ -36,9 +36,15 @@
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 @property (nonatomic, strong) People *people;
 @property (nonatomic, strong) NSString *profileID;
-@property (strong, nonatomic) NSMutableArray *userFriends;
+@property (strong, nonatomic) NSMutableArray *userFriendsHi;
+@property (strong, nonatomic) NSMutableArray *userFriendsLow;
+
+// For application tests purpose only
+@property __block BOOL *boolFriendsLoaded;
+
 
 - (void)facebookLogout;
 - (void)facebookLogin;
+
 
 @end

@@ -10,6 +10,7 @@
 #import <FacebookSDK/FacebookSDK.h>
 
 #import "AppDelegate.h"
+#import "FriendCell.h"
 
 @interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
