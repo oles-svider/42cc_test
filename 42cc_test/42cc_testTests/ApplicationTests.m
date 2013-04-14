@@ -20,6 +20,7 @@
 
 - (void)setUp {
     // Set-up code here.
+    NSLog(@"Tests setUp called");
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     
@@ -30,6 +31,10 @@
     [self.editViewController view];
     self.editViewController.delegate = self.viewController;
     
+    // wait while friends not loaded
+    while (!self.appDelegate.boolFriendsLoaded)
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
     self.friendsViewController = [storyboard instantiateViewControllerWithIdentifier:@"FriendsViewController"];
     [self.friendsViewController view];
     
@@ -37,6 +42,7 @@
 
 - (void)tearDown {
     // Tear-down code here.
+    NSLog(@"Tests tearDown called");
     self.viewController = nil;
     self.editViewController = nil;
     self.friendsViewController = nil;
@@ -210,5 +216,64 @@
 }
 
 
+- (void)testFriendsArrays {
+    STAssertNotNil(self.appDelegate.userFriendsHi, @"NSMutableArray appDelegate.userFriendsHi is nil");
+    STAssertNotNil(self.appDelegate.userFriendsLow, @"NSMutableArray appDelegate.userFriendsLow is nil");
+}
+
+///*
+- (void)testChangePriorityUp {
+    NSString *sourceID = nil;
+    
+    FriendCell *cell = (FriendCell *)[self.friendsViewController.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+    if (cell != nil) {
+        sourceID = cell.friendID;
+        [cell.buttonPriority sendActionsForControlEvents:UIControlEventTouchUpInside];
+        
+        BOOL boolFoundHi = false;
+        BOOL boolFoundLow = false;
+        // Now checks mutable arrays ...
+        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsHi) {
+            if ([friend objectForKey:@"id"] == sourceID)
+                boolFoundHi = true;
+        }
+        STAssertTrue(boolFoundHi, @"No friend is found in appDelegate.userFriendsHi (must be)");
+        
+        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsLow) {
+            if ([friend objectForKey:@"id"] == sourceID)
+                boolFoundLow = true;
+        }
+        STAssertFalse(boolFoundLow, @"Friend is found in appDelegate.userFriendsLow (must not be)");
+    }
+}
+//*/
+
+
+///*
+- (void)testChangePriorityDown {
+    NSString *sourceID = nil;
+    
+    FriendCell *cell = (FriendCell *)[self.friendsViewController.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    if (cell != nil) {
+        sourceID = cell.friendID;
+        [cell.buttonPriority sendActionsForControlEvents:UIControlEventTouchUpInside];
+        
+        BOOL boolFoundHi = false;
+        BOOL boolFoundLow = false;
+        // Now checks mutable arrays ...
+        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsHi) {
+            if ([friend objectForKey:@"id"] == sourceID)
+                boolFoundHi = true;
+        }
+        STAssertFalse(boolFoundHi, @"No friend is found in appDelegate.userFriendsHi (must be)");
+        
+        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsLow) {
+            if ([friend objectForKey:@"id"] == sourceID)
+                boolFoundLow = true;
+        }
+        STAssertTrue(boolFoundLow, @"Friend is found in appDelegate.userFriendsLow (must not be)");
+    }
+}
+//*/
 
 @end

@@ -28,6 +28,7 @@
 		abort();
 	}
     
+    self.boolFriendsLoaded = false;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     people = (People *)[self.fetchedResultsController objectAtIndexPath:indexPath];
     
@@ -130,7 +131,8 @@
         
         NSDictionary* friends = [result objectForKey:@"data"];
         NSLog(@"Found: %i friends", friends.count);
-        self.userFriends = [[NSMutableArray alloc] init];
+        self.userFriendsHi = [[NSMutableArray alloc] init];
+        self.userFriendsLow = [[NSMutableArray alloc] init];
         
         for (NSDictionary<FBGraphUser>* friend in friends) {
             NSLog(@"I have a friend named %@ with info %@", friend.name, friend);
@@ -143,9 +145,13 @@
             
             [u setObject:image forKey:@"picture"];
             
-            [self.userFriends addObject:u];
+            // Priority
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:friend.id])
+                    [self.userFriendsHi addObject:u];
+            else [self.userFriendsLow addObject:u];
+            
         }
-        
+        self.boolFriendsLoaded = true;
         [self.window.rootViewController performSegueWithIdentifier: @"CloseSplash" sender: self];
     };
     

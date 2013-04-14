@@ -55,17 +55,36 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"CellIdentifier";
-    UITableViewCell *cell = nil;
+    //UITableViewCell *cell = nil;
+    FriendCell *cell = nil;
     
-    cell = (UITableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    cell = (FriendCell *)[self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[FriendCell alloc] init];
+        
     }
     
     // configure cell
-    cell.textLabel.text = [self.appDelegate.userFriends[indexPath.row] objectForKey:@"name"];
-    cell.imageView.image = [self.appDelegate.userFriends[indexPath.row] objectForKey:@"picture"];
+    NSMutableArray *friendSource = nil;
+    if (indexPath.section == 0) {
+        friendSource = self.appDelegate.userFriendsHi;
+        cell.boolHiPriority = true;
+    } else {
+        friendSource = self.appDelegate.userFriendsLow;
+        cell.boolHiPriority = false;
+    }
+    
+    cell.imagePhoto.image = [friendSource[indexPath.row] objectForKey:@"picture"];
+    cell.labelName.text = [friendSource[indexPath.row] objectForKey:@"name"];
+    cell.friendID = [friendSource[indexPath.row] objectForKey:@"id"];
+    cell.tableView = self.tableView;
+    cell.friendIndex = indexPath.row;
+    
+    if (indexPath.section == 0)
+        [cell.buttonPriority setImage:[UIImage imageNamed:@"down_24"] forState:UIControlStateNormal];
+    else
+        [cell.buttonPriority setImage:[UIImage imageNamed:@"up_24"] forState:UIControlStateNormal];
     
     return cell;
 }
@@ -73,21 +92,49 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // This link open default facebook app but i got auth windows for app
     //NSString *str = [NSString stringWithFormat:@"fb://profile/%@", user.id];
-    NSString *str = [NSString stringWithFormat:@"http://www.facebook.com/%@", [self.appDelegate.userFriends[indexPath.row] objectForKey:@"id"]];
+    
+    NSString *friendID = nil;
+    
+    if (indexPath.section == 0)
+        friendID = [self.appDelegate.userFriendsHi[indexPath.row] objectForKey:@"id"];
+    else friendID = [self.appDelegate.userFriendsLow[indexPath.row] objectForKey:@"id"];
+    
+    NSString *str = [NSString stringWithFormat:@"http://www.facebook.com/%@", friendID];
     NSURL *url = [NSURL URLWithString:str];
     [[UIApplication sharedApplication] openURL:url];
-    NSLog(@"Current friend selections: %@", self.appDelegate.userFriends[indexPath.row]);
+    NSLog(@"Current friend selections: %@", friendID);
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.appDelegate.userFriends.count;
+    if (section == 0)
+        return self.appDelegate.userFriendsHi.count;
+    else return self.appDelegate.userFriendsLow.count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *sectionName;
+    switch (section)
+    {
+        case 0:
+            sectionName = @"High Priority";
+            break;
+        case 1:
+            sectionName = @"Low Priority";
+            break;
+        default:
+            sectionName = @"";
+            break;
+    }
+    return sectionName;
+}
+
 
 @end
