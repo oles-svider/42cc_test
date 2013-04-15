@@ -514,54 +514,6 @@
         <image name="up_24.png" width="24" height="24"/>
         <image name="user.png" width="24" height="21"/>
     </resources>
-    <classes>
-        <class className="EditViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/EditViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="cancelAction:"/>
-                <relationship kind="action" name="saveAction:"/>
-                <relationship kind="action" name="selectBirthday:"/>
-                <relationship kind="outlet" name="buttonSave" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="labelBirth" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="textFieldEmail" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldLastName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textFieldName" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="textViewBio" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="FriendCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/FriendCell.h"/>
-            <relationships>
-                <relationship kind="action" name="actionTogglePriority:"/>
-                <relationship kind="outlet" name="buttonPriority" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="imagePhoto" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="labelName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="FriendsViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/FriendsViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="ViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="actionLogout:"/>
-                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="buttonEdit" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="buttonLogout" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="imagePhoto" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="labelBirth" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="labelContacts" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="labelName" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="textViewBio" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
