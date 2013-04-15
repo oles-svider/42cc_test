@@ -352,7 +352,9 @@
                                     <constraint firstAttribute="width" constant="240" id="T51-PW-g72"/>
                                 </constraints>
                                 <attributedString key="attributedText">
-                                    <fragment content="Author: Oleksandr Svider email: mustafa.oles@gmail.com mob.: 30983518370">
+                                    <fragment content="Author: Oleksandr Svider
+email: mustafa.oles@gmail.com
+mob.: 30983518370">
                                         <attributes>
                                             <font key="NSFont" size="14" name="Helvetica"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
