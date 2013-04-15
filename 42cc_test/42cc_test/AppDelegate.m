@@ -226,10 +226,12 @@
     }
     
     // load friends list
+    /*
     if (!bFriendsRequested) {
         FBRequest* friendsRequest = [FBRequest requestForMyFriends];
         [friendsRequest startWithCompletionHandler:friendsHandler];
     }
+     */
 }
 
 
