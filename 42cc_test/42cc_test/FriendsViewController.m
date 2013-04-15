@@ -31,6 +31,12 @@
 	// Do any additional setup after loading the view.
     
     appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    NSError *error = nil;
+	if (![appDelegate.fetchedResultsControllerForFriends performFetch:&error]) {
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		abort();
+	}
     [self.tableView reloadData];
 }
 
@@ -45,13 +51,6 @@
 #pragma mark -
 #pragma mark UITableView
 
-/*
- - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
- 
- return @"section";
- }
- */
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"CellIdentifier";
@@ -65,23 +64,12 @@
         
     }
     
-    // configure cell
-    NSMutableArray *friendSource = nil;
-    if (indexPath.section == 0) {
-        friendSource = self.appDelegate.userFriendsHi;
-        cell.boolHiPriority = true;
-    } else {
-        friendSource = self.appDelegate.userFriendsLow;
-        cell.boolHiPriority = false;
-    }
-    
-    cell.imagePhoto.image = [friendSource[indexPath.row] objectForKey:@"picture"];
-    cell.labelName.text = [friendSource[indexPath.row] objectForKey:@"name"];
-    cell.friendID = [friendSource[indexPath.row] objectForKey:@"id"];
+    Friend *friend = (Friend *)[appDelegate.fetchedResultsControllerForFriends objectAtIndexPath:indexPath];
+    cell.imagePhoto.image = [UIImage imageWithData:friend.photo];
+    cell.labelName.text = friend.name;
+    cell.friendInfo = friend;
     cell.tableView = self.tableView;
-    cell.friendIndex = indexPath.row;
-    
-    if (indexPath.section == 0)
+    if ([friend.priority isEqualToNumber:[NSNumber numberWithInt:1]])
         [cell.buttonPriority setImage:[UIImage imageNamed:@"down_24"] forState:UIControlStateNormal];
     else
         [cell.buttonPriority setImage:[UIImage imageNamed:@"up_24"] forState:UIControlStateNormal];
@@ -95,9 +83,8 @@
     
     NSString *friendID = nil;
     
-    if (indexPath.section == 0)
-        friendID = [self.appDelegate.userFriendsHi[indexPath.row] objectForKey:@"id"];
-    else friendID = [self.appDelegate.userFriendsLow[indexPath.row] objectForKey:@"id"];
+    Friend *friend = (Friend *)[appDelegate.fetchedResultsControllerForFriends objectAtIndexPath:indexPath];
+    friendID = friend.friend_id;
     
     NSString *str = [NSString stringWithFormat:@"http://www.facebook.com/%@", friendID];
     NSURL *url = [NSURL URLWithString:str];
@@ -108,32 +95,25 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0)
-        return self.appDelegate.userFriendsHi.count;
-    else return self.appDelegate.userFriendsLow.count;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[appDelegate.fetchedResultsControllerForFriends sections] objectAtIndex:section];
+    int numberOfRows = [sectionInfo numberOfObjects];
+    return numberOfRows;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    NSInteger count = [[appDelegate.fetchedResultsControllerForFriends sections] count];
+    return count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSString *sectionName;
-    switch (section)
-    {
-        case 0:
-            sectionName = @"High Priority";
-            break;
-        case 1:
-            sectionName = @"Low Priority";
-            break;
-        default:
-            sectionName = @"";
-            break;
-    }
-    return sectionName;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[appDelegate.fetchedResultsControllerForFriends sections] objectAtIndex:section];
+    NSString *name;
+    if ([[sectionInfo name] isEqual:@"1"])
+        name = @"Hi priority";
+    else name = @"Low priority";
+    return name;
 }
 
 

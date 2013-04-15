@@ -10,7 +10,7 @@
 
 @implementation FriendCell
 
-@synthesize tableView;
+@synthesize tableView, friendInfo;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -32,26 +32,21 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:self.friendID])
-    {
-        // set to NSUserDefaults
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:self.friendID];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        // exchange objects
-        [appDelegate.userFriendsLow addObjectsFromArray:[[NSArray alloc] initWithObjects:appDelegate.userFriendsHi[self.friendIndex], nil]];
-        [appDelegate.userFriendsHi removeObjectAtIndex:self.friendIndex];
-        
-    } else {
-        // set to NSUserDefaults
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:self.friendID];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        // exchange objects
-        [appDelegate.userFriendsHi addObjectsFromArray:[[NSArray alloc] initWithObjects:appDelegate.userFriendsLow[self.friendIndex], nil]];
-        [appDelegate.userFriendsLow removeObjectAtIndex:self.friendIndex];
-        
-    }
+    if ([friendInfo.priority isEqualToNumber:[NSNumber numberWithInt:0]])
+        friendInfo.priority = [NSNumber numberWithInt:1];
+    else
+        friendInfo.priority = [NSNumber numberWithInt:0];
+    
+    NSError *saveError = nil;
+    [appDelegate.managedObjectContext save:&saveError];
+    
+    NSError *error = nil;
+	if (![appDelegate.fetchedResultsControllerForFriends performFetch:&error]) {
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		abort();
+	}
+    
     [self.tableView reloadData];
 }
+
 @end

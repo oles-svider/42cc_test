@@ -216,62 +216,46 @@
 }
 
 
-- (void)testFriendsArrays {
-    STAssertNotNil(self.appDelegate.userFriendsHi, @"NSMutableArray appDelegate.userFriendsHi is nil");
-    STAssertNotNil(self.appDelegate.userFriendsLow, @"NSMutableArray appDelegate.userFriendsLow is nil");
-}
 
 ///*
-- (void)testChangePriorityUp {
+- (void)testChangePriorityDown {
     NSString *sourceID = nil;
     
     FriendCell *cell = (FriendCell *)[self.friendsViewController.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
     if (cell != nil) {
-        sourceID = cell.friendID;
+        sourceID = cell.friendInfo.friend_id;
+        int source_priority = cell.friendInfo.priority;
+        
         [cell.buttonPriority sendActionsForControlEvents:UIControlEventTouchUpInside];
         
-        BOOL boolFoundHi = false;
-        BOOL boolFoundLow = false;
-        // Now checks mutable arrays ...
-        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsHi) {
-            if ([friend objectForKey:@"id"] == sourceID)
-                boolFoundHi = true;
+        for (Friend *f in [appDelegate.fetchedResultsControllerForFriends fetchedObjects]) {
+            if (f.friend_id == sourceID) {
+                if ([f.priority isEqualToNumber:[NSNumber numberWithInt:source_priority]])
+                    STFail(@"Priority (change down) doesn't work");
+            }
         }
-        STAssertTrue(boolFoundHi, @"No friend is found in appDelegate.userFriendsHi (must be)");
-        
-        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsLow) {
-            if ([friend objectForKey:@"id"] == sourceID)
-                boolFoundLow = true;
-        }
-        STAssertFalse(boolFoundLow, @"Friend is found in appDelegate.userFriendsLow (must not be)");
     }
 }
 //*/
 
 
 ///*
-- (void)testChangePriorityDown {
+- (void)testChangePriorityUp {
     NSString *sourceID = nil;
     
     FriendCell *cell = (FriendCell *)[self.friendsViewController.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     if (cell != nil) {
-        sourceID = cell.friendID;
+        sourceID = cell.friendInfo.friend_id;
+        int source_priority = cell.friendInfo.priority;
+        
         [cell.buttonPriority sendActionsForControlEvents:UIControlEventTouchUpInside];
         
-        BOOL boolFoundHi = false;
-        BOOL boolFoundLow = false;
-        // Now checks mutable arrays ...
-        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsHi) {
-            if ([friend objectForKey:@"id"] == sourceID)
-                boolFoundHi = true;
+        for (Friend *f in [appDelegate.fetchedResultsControllerForFriends fetchedObjects]) {
+            if (f.friend_id == sourceID) {
+                if ([f.priority isEqualToNumber:[NSNumber numberWithInt:source_priority]])
+                    STFail(@"Priority (change up) doesn't work");
+            }
         }
-        STAssertFalse(boolFoundHi, @"No friend is found in appDelegate.userFriendsHi (must be)");
-        
-        for (NSDictionary<FBGraphUser>* friend in self.appDelegate.userFriendsLow) {
-            if ([friend objectForKey:@"id"] == sourceID)
-                boolFoundLow = true;
-        }
-        STAssertTrue(boolFoundLow, @"Friend is found in appDelegate.userFriendsLow (must not be)");
     }
 }
 //*/

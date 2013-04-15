@@ -12,14 +12,14 @@
 
 @interface FriendCell : UITableViewCell
 
-@property (nonatomic) BOOL boolHiPriority;
-@property (nonatomic) NSInteger friendIndex;
-@property (strong, nonatomic) NSString *friendID;
 @property (nonatomic, strong) UITableView *tableView;
+
+@property (nonatomic, strong) Friend *friendInfo;
 
 @property (strong, nonatomic) IBOutlet UIImageView *imagePhoto;
 @property (strong, nonatomic) IBOutlet UILabel *labelName;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPriority;
+
 - (IBAction)actionTogglePriority:(id)sender;
 
 @end

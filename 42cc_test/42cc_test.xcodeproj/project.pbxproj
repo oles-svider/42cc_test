@@ -41,10 +41,12 @@
 		76A4498B1701B7F900B5B1E3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A449661701B7F900B5B1E3 /* Foundation.framework */; };
 		76A449931701B7F900B5B1E3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76A449911701B7F900B5B1E3 /* InfoPlist.strings */; };
 		76A449961701B7F900B5B1E3 /* ApplicationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A449951701B7F900B5B1E3 /* ApplicationTests.m */; };
+		76BDDACB171C4E7F000C23F9 /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 76BDDACA171C4E7F000C23F9 /* Friend.m */; };
+		76BDDACE171C6B99000C23F9 /* Data.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 76BDDACD171C6B99000C23F9 /* Data.sqlite */; };
+		76BDDACF171C6EBD000C23F9 /* Data.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 76BDDACD171C6B99000C23F9 /* Data.sqlite */; };
 		76C19826170734E2007F6CA6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C19825170734E2007F6CA6 /* CoreData.framework */; };
 		76C1982A170774BD007F6CA6 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 76C19828170774BD007F6CA6 /* DataModel.xcdatamodeld */; };
 		76C1982D17077927007F6CA6 /* People.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C1982C17077927007F6CA6 /* People.m */; };
-		76C198361707969C007F6CA6 /* Data.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 76C198351707969C007F6CA6 /* Data.sqlite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,11 +99,14 @@
 		76A449921701B7F900B5B1E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		76A449941701B7F900B5B1E3 /* ApplicationTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplicationTests.h; sourceTree = "<group>"; };
 		76A449951701B7F900B5B1E3 /* ApplicationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplicationTests.m; sourceTree = "<group>"; };
+		76BDDAC9171C4E7F000C23F9 /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
+		76BDDACA171C4E7F000C23F9 /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
+		76BDDACC171C60FF000C23F9 /* DataModel_Friends.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = DataModel_Friends.xcdatamodel; sourceTree = "<group>"; };
+		76BDDACD171C6B99000C23F9 /* Data.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Data.sqlite; sourceTree = "<group>"; };
 		76C19825170734E2007F6CA6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		76C19829170774BD007F6CA6 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		76C1982B17077927007F6CA6 /* People.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = People.h; path = ../People.h; sourceTree = "<group>"; };
 		76C1982C17077927007F6CA6 /* People.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = People.m; path = ../People.m; sourceTree = "<group>"; };
-		76C198351707969C007F6CA6 /* Data.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Data.sqlite; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,8 +249,10 @@
 		76C1982E17077932007F6CA6 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				76C198351707969C007F6CA6 /* Data.sqlite */,
+				76BDDACD171C6B99000C23F9 /* Data.sqlite */,
 				76C19828170774BD007F6CA6 /* DataModel.xcdatamodeld */,
+				76BDDAC9171C4E7F000C23F9 /* Friend.h */,
+				76BDDACA171C4E7F000C23F9 /* Friend.m */,
 				76C1982B17077927007F6CA6 /* People.h */,
 				76C1982C17077927007F6CA6 /* People.m */,
 			);
@@ -323,12 +330,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76BDDACF171C6EBD000C23F9 /* Data.sqlite in Resources */,
 				76A4496F1701B7F900B5B1E3 /* InfoPlist.strings in Resources */,
 				76A449771701B7F900B5B1E3 /* Default.png in Resources */,
 				76A449791701B7F900B5B1E3 /* Default@2x.png in Resources */,
 				76A4497B1701B7F900B5B1E3 /* Default-568h@2x.png in Resources */,
 				76A4497E1701B7F900B5B1E3 /* MainStoryboard.storyboard in Resources */,
-				76C198361707969C007F6CA6 /* Data.sqlite in Resources */,
 				7617244717083CFF00F038D1 /* user.png in Resources */,
 				761BC82A1712014D00178EAC /* info_24.png in Resources */,
 				760DFD2F171485A10073145C /* FacebookSDKResources.bundle in Resources */,
@@ -344,6 +351,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76A449931701B7F900B5B1E3 /* InfoPlist.strings in Resources */,
+				76BDDACE171C6B99000C23F9 /* Data.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,6 +386,7 @@
 				7622CA321711BF5E008827B8 /* EditViewController.m in Sources */,
 				760DFD38171491B90073145C /* FriendsViewController.m in Sources */,
 				761B71B21719E70E002A97B9 /* FriendCell.m in Sources */,
+				76BDDACB171C4E7F000C23F9 /* Friend.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,9 +603,10 @@
 		76C19828170774BD007F6CA6 /* DataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				76BDDACC171C60FF000C23F9 /* DataModel_Friends.xcdatamodel */,
 				76C19829170774BD007F6CA6 /* DataModel.xcdatamodel */,
 			);
-			currentVersion = 76C19829170774BD007F6CA6 /* DataModel.xcdatamodel */;
+			currentVersion = 76BDDACC171C60FF000C23F9 /* DataModel_Friends.xcdatamodel */;
 			name = DataModel.xcdatamodeld;
 			path = ../DataModel.xcdatamodeld;
 			sourceTree = "<group>";

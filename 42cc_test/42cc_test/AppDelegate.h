@@ -11,6 +11,8 @@
 #import <FacebookSDK/FacebookSDK.h>
 
 #import "People.h"
+#import "Friend.h"
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, NSFetchedResultsControllerDelegate, UIAlertViewDelegate> {
     
@@ -18,6 +20,7 @@
     NSManagedObjectContext *managedObjectContext;
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSFetchedResultsController *fetchedResultsController;
+    NSFetchedResultsController *fetchedResultsControllerForFriends;
 }
 
 - (BOOL)application:(UIApplication *)application
@@ -29,22 +32,20 @@
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsControllerForFriends;
 
 - (NSString *)applicationDocumentsDirectory;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 @property (nonatomic, strong) People *people;
-@property (nonatomic, strong) NSString *profileID;
-@property (strong, nonatomic) NSMutableArray *userFriendsHi;
-@property (strong, nonatomic) NSMutableArray *userFriendsLow;
 
-// For application tests purpose only
 @property __block BOOL *boolFriendsLoaded;
 
 
 - (void)facebookLogout;
 - (void)facebookLogin;
+- (void)clearFriendsList;
 
 
 @end

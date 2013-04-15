@@ -11,7 +11,7 @@
 
 @implementation AppDelegate
 
-@synthesize managedObjectModel, persistentStoreCoordinator, managedObjectContext, fetchedResultsController, people;
+@synthesize managedObjectModel, persistentStoreCoordinator, managedObjectContext, fetchedResultsController, people, fetchedResultsControllerForFriends;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -19,11 +19,12 @@
     
     NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
-		/*
-		 Replace this implementation with code to handle the error appropriately.
-		 
-		 abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-		 */
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		abort();
+	}
+    
+    error = nil;
+	if (![self.fetchedResultsControllerForFriends performFetch:&error]) {
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 		abort();
 	}
@@ -125,34 +126,56 @@
     NSLog(@"facebook logout!");
 }
 
+
+- (void)clearFriendsList {
+    NSFetchRequest * allFriends = [[NSFetchRequest alloc] init];
+    [allFriends setEntity:[NSEntityDescription entityForName:@"Friend" inManagedObjectContext:self.managedObjectContext]];
+    [allFriends setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    
+    NSError * error = nil;
+    NSArray * friends = [self.managedObjectContext executeFetchRequest:allFriends error:&error];
+    
+    //error handling goes here
+    for (NSManagedObject * friend in friends) {
+        [self.managedObjectContext deleteObject:friend];
+    }
+    NSError *saveError = nil;
+    [self.managedObjectContext save:&saveError];
+}
+
 - (void)facebookLogin {
     
     FBRequestHandler friendsHandler = ^ (FBRequestConnection *connection, NSDictionary *result, NSError *error) {
         
         NSDictionary* friends = [result objectForKey:@"data"];
         NSLog(@"Found: %i friends", friends.count);
-        self.userFriendsHi = [[NSMutableArray alloc] init];
-        self.userFriendsLow = [[NSMutableArray alloc] init];
+        
+        if (friends.count > 0)
+            [self clearFriendsList];
         
         for (NSDictionary<FBGraphUser>* friend in friends) {
             NSLog(@"I have a friend named %@ with info %@", friend.name, friend);
-            NSMutableDictionary *u = [[NSMutableDictionary alloc] initWithDictionary:friend copyItems:YES];
+            
+            Friend *friendObject = (Friend *)[NSEntityDescription insertNewObjectForEntityForName:@"Friend" inManagedObjectContext:self.managedObjectContext];
             
             // picture
             NSString *url = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?width=64&height=64", friend.id];
             NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-            UIImage *image = [UIImage imageWithData:data];
             
-            [u setObject:image forKey:@"picture"];
-            
-            // Priority
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:friend.id])
-                    [self.userFriendsHi addObject:u];
-            else [self.userFriendsLow addObject:u];
-            
+            friendObject.friend_id = friend.id;
+            friendObject.photo = data;
+            friendObject.name = friend.name;
+            friendObject.priority = [NSNumber numberWithInt:0];
         }
+        
+        NSError *merror;
+        if (![self.managedObjectContext save:&merror]) {
+            NSLog(@"Unresolved error while saving  - %@, %@", merror, [merror userInfo]);
+            abort();
+        }
+        
         self.boolFriendsLoaded = true;
-        [self.window.rootViewController performSegueWithIdentifier: @"CloseSplash" sender: self];
+        [[self.window.rootViewController presentedViewController] performSegueWithIdentifier: @"CloseSplash" sender: self];
     };
     
     
@@ -193,12 +216,11 @@
         
     };
     
-    BOOL bFriendsRequested = false;
+    self.boolFriendsLoaded = true;
     if (![[FBSession activeSession] isOpen])
     {
         NSArray *permissions =
         [NSArray arrayWithObjects:@"email", @"user_photos", @"user_birthday", @"user_about_me", nil];
-        bFriendsRequested = true;
         [FBSession openActiveSessionWithReadPermissions:permissions
                                            allowLoginUI:YES
                                       completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -211,10 +233,11 @@
                                                   
                                                   [[[FBRequest alloc] initWithSession:session graphPath:@"me"] startWithCompletionHandler:handler];
                                                   
+                                                  self.boolFriendsLoaded = false;
+                                                  [self.window.rootViewController performSegueWithIdentifier: @"CreateSplash" sender: self];
+                                                  FBRequest* friendsRequest = [FBRequest requestForMyFriends];
+                                                  [friendsRequest startWithCompletionHandler:friendsHandler];
                                               }
-                                              // load friends list
-                                              FBRequest* friendsRequest = [FBRequest requestForMyFriends];
-                                              [friendsRequest startWithCompletionHandler:friendsHandler];
                                               
                                           } else {
                                               UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook login error" message:@"Try one more time?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
@@ -225,13 +248,8 @@
         
     }
     
-    // load friends list
-    /*
-    if (!bFriendsRequested) {
-        FBRequest* friendsRequest = [FBRequest requestForMyFriends];
-        [friendsRequest startWithCompletionHandler:friendsHandler];
-    }
-     */
+    while (!self.boolFriendsLoaded)
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
 }
 
 
@@ -286,7 +304,8 @@
 	 Set up the store.
 	 For the sake of illustration, provide a pre-populated default store.
 	 */
-	NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
 	// If the expected store doesn't exist, copy the default store.
 	if (![fileManager fileExistsAtPath:storePath]) {
 		NSString *defaultStorePath = [[NSBundle mainBundle] pathForResource:@"Data" ofType:@"sqlite"];
@@ -294,7 +313,7 @@
 			[fileManager copyItemAtPath:defaultStorePath toPath:storePath error:NULL];
 		}
 	}
-	
+    
 	NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
 	
 	NSError *error;
@@ -346,6 +365,32 @@
     return fetchedResultsController;
 }
 
+
+- (NSFetchedResultsController *)fetchedResultsControllerForFriends {
+    // Set up the fetched results controller if needed.
+    if (fetchedResultsControllerForFriends == nil) {
+        // Create the fetch request for the entity.
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        // Edit the entity name as appropriate.
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Friend" inManagedObjectContext:self.managedObjectContext];
+        [fetchRequest setEntity:entity];
+        
+        // Edit the sort key as appropriate.
+        NSSortDescriptor *sortDescriptorPriority = [[NSSortDescriptor alloc] initWithKey:@"priority" ascending:NO];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptorPriority, sortDescriptor, nil];
+        
+        [fetchRequest setSortDescriptors:sortDescriptors];
+        
+        // Edit the section name key path and cache name if appropriate.
+        // nil for section name key path means "no sections".
+        NSFetchedResultsController *aFetchedResultsControllerForFriends = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"priority" cacheName:@"Root"];
+        aFetchedResultsControllerForFriends.delegate = self;
+        self.fetchedResultsControllerForFriends = aFetchedResultsControllerForFriends;
+    }
+    
+    return fetchedResultsControllerForFriends;
+}
 
 /**
  Returns the path to the application's documents directory.
